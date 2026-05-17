@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三角洲行动攻略站 | Delta Force Guide</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #f0883e;
+    --accent2: #e85d04;
+    --green: #3fb950;
+    --blue: #58a6ff;
+    --red: #f85149;
+    --gold: #d2991d;
+    --purple: #a371f7;
+    --teal: #39d353;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  /* ========== Nav ========== */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,17,23,0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; align-items: center; height: 56px;
+    gap: 32px;
+  }
+  .nav-logo {
+    font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+    color: var(--text); white-space: nowrap;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 24px; font-size: 14px; }
+  .nav-links a { color: var(--muted); transition: color 0.2s; font-weight: 500; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-search {
+    margin-left: auto;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 14px; font-size: 13px;
+    color: var(--text); width: 200px; outline: none;
+  }
+  .nav-search:focus { border-color: var(--accent); }
+  .nav-search::placeholder { color: var(--muted); }
+
+  /* ========== Hero ========== */
+  .hero {
+    padding: 80px 24px 60px; text-align: center;
+    background:
+      linear-gradient(180deg, rgba(240,136,62,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 0%, rgba(240,136,62,0.10) 0%, transparent 60%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; padding: 4px 14px;
+    border-radius: 20px; background: rgba(240,136,62,0.12);
+    color: var(--accent); border: 1px solid rgba(240,136,62,0.25);
+    margin-bottom: 20px; letter-spacing: 1px;
+  }
+  .hero-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #f0883e; box-shadow: 0 0 6px #f0883e; }
+  .hero h1 { font-size: 44px; font-weight: 900; letter-spacing: -1px; margin-bottom: 12px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: var(--muted); font-size: 16px; max-width: 540px; margin: 0 auto 28px; }
+  .hero-search {
+    display: inline-flex; align-items: center;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 18px; width: 400px; max-width: 90vw;
+  }
+  .hero-search input {
+    flex:1; background: none; border: none; outline: none;
+    font-size: 15px; color: var(--text);
+  }
+  .hero-search input::placeholder { color: var(--muted); }
+  .hero-search button {
+    background: var(--accent2); color: #fff; border: none;
+    padding: 8px 20px; border-radius: 8px; font-size: 14px;
+    font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  .hero-search button:hover { background: #d4530a; }
+
+  .hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 32px; }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: var(--accent); }
+  .stat-label { font-size: 12px; color: var(--muted); }
+
+  /* ========== Container & Sections ========== */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 56px 0; }
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 28px; flex-wrap: wrap; gap: 10px;
+  }
+  .section-header h2 { font-size: 22px; font-weight: 700; }
+  .section-header h2 span { color: var(--accent); }
+  .section-header .more { font-size: 13px; color: var(--muted); transition: color 0.2s; }
+  .section-header .more:hover { color: var(--text); }
+
+  /* ========== Tier List ========== */
+  .tier-bar {
+    display: flex; gap: 2px; margin-bottom: 24px;
+    border-radius: 10px; overflow: hidden;
+  }
+  .tier-item {
+    flex: 1; text-align: center; padding: 8px 4px; font-size: 12px;
+    font-weight: 700; cursor: pointer; transition: filter 0.2s;
+  }
+  .tier-item:hover { filter: brightness(1.3); }
+  .tier-t0 { background: #f85149; color: #fff; }
+  .tier-t05 { background: #f0883e; color: #fff; }
+  .tier-t1 { background: #d2991d; color: #000; }
+  .tier-t2 { background: #30363d; color: var(--muted); }
+
+  /* ========== Weapon Cards ========== */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card-rank {
+    position: absolute; top: -1px; right: -1px;
+    font-size: 11px; font-weight: 800; padding: 4px 10px;
+    border-radius: 0 12px 0 10px; color: #fff;
+  }
+  .rank-t0 { background: #f85149; }
+  .rank-t05 { background: #f0883e; }
+  .rank-t1 { background: #d2991d; color: #000; }
+  .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .card-icon {
+    width: 48px; height: 48px; border-radius: 10px;
+    background: var(--surface2); display: flex; align-items: center;
+    justify-content: center; font-size: 22px;
+  }
+  .card-title { font-weight: 700; font-size: 16px; }
+  .card-subtitle { font-size: 12px; color: var(--muted); }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .card-tag {
+    font-size: 11px; padding: 3px 10px; border-radius: 12px;
+    background: var(--surface2); color: var(--muted);
+  }
+  .card-tag.t0 { background: rgba(248,81,73,0.15); color: var(--red); font-weight: 600; }
+  .card-tag.t05 { background: rgba(240,136,62,0.15); color: var(--accent); font-weight: 600; }
+  .card-tag.t1 { background: rgba(210,153,29,0.15); color: var(--gold); font-weight: 600; }
+  .card-tag.newbie { background: rgba(63,185,80,0.12); color: var(--green); }
+  .card-desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.7; }
+  .card-info {
+    display: flex; gap: 16px; font-size: 12px; color: var(--muted);
+    border-top: 1px solid var(--border); padding-top: 12px;
+  }
+  .card-info span strong { color: var(--text); display: block; font-size: 14px; }
+  .card-code {
+    font-size: 11px; font-family: "SF Mono","Cascadia Code","Consolas",monospace;
+    background: var(--bg); padding: 4px 8px; border-radius: 4px;
+    color: var(--teal); word-break: break-all; margin-top: 8px;
+    border: 1px solid var(--border);
+  }
+
+  /* ========== Map Cards ========== */
+  .map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .map-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .map-card:hover { border-color: var(--accent); }
+  .map-thumb {
+    height: 130px; display: flex; align-items: center; justify-content: center;
+    font-size: 42px; position: relative;
+  }
+  .map-mode-badge {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    color: #fff; letter-spacing: 0.5px;
+  }
+  .mode-warfare { background: rgba(248,81,73,0.85); }
+  .mode-ops { background: rgba(240,136,62,0.85); }
+  .map-thumb.zero-dam { background: linear-gradient(135deg, #1a3a4a, #0f2129); }
+  .map-thumb.layali { background: linear-gradient(135deg, #4a3a1a, #2a1f0f); }
+  .map-thumb.space-city { background: linear-gradient(135deg, #2a1a3a, #150f20); }
+  .map-thumb.brakkesh { background: linear-gradient(135deg, #3a2a1a, #1f150f); }
+  .map-thumb.tide { background: linear-gradient(135deg, #1a3a3a, #0f1f1f); }
+  .map-thumb.cracked { background: linear-gradient(135deg, #3a2a1a, #1f180f); }
+  .map-body { padding: 16px; }
+  .map-body h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .map-body .map-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .map-body .map-meta span { font-size: 11px; color: var(--muted); background: var(--surface2); padding: 2px 8px; border-radius: 4px; }
+
+  /* ========== Operator Grid ========== */
+  .op-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+  .op-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px; transition: border-color 0.2s;
+    display: flex; gap: 14px;
+  }
+  .op-card:hover { border-color: var(--accent); }
+  .op-avatar {
+    width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700; color: #fff;
+  }
+  .op-avatar.assault { background: linear-gradient(135deg, #f85149, #b62324); }
+  .op-avatar.support { background: linear-gradient(135deg, #58a6ff, #1f6feb); }
+  .op-avatar.recon { background: linear-gradient(135deg, #3fb950, #1a7f2b); }
+  .op-avatar.engineer { background: linear-gradient(135deg, #d2991d, #9e6a0e); }
+  .op-info { flex: 1; min-width: 0; }
+  .op-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .op-info .op-eng { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .op-info .op-skill { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .role-badge {
+    display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 10px; margin-bottom: 4px; letter-spacing: 0.5px;
+  }
+  .role-badge.assault { background: rgba(248,81,73,0.15); color: var(--red); }
+  .role-badge.support { background: rgba(88,166,255,0.15); color: var(--blue); }
+  .role-badge.recon { background: rgba(63,185,80,0.15); color: var(--green); }
+  .role-badge.engineer { background: rgba(210,153,29,0.15); color: var(--gold); }
+
+  /* ========== Tier Table ========== */
+  .tier-table-wrapper { overflow-x: auto; }
+  .tier-table {
+    width: 100%; border-collapse: collapse; font-size: 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .tier-table thead { background: var(--surface2); }
+  .tier-table th {
+    text-align: left; padding: 12px 16px; font-size: 11px;
+    font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+  }
+  .tier-table td { padding: 11px 16px; border-top: 1px solid var(--border); }
+  .tier-table tr:hover { background: rgba(255,255,255,0.02); }
+  .tier-badge {
+    display: inline-block; width: 28px; height: 28px; line-height: 28px;
+    text-align: center; border-radius: 6px; font-size: 12px; font-weight: 800;
+  }
+  .tier-badge.t0 { background: #f85149; color: #fff; }
+  .tier-badge.t05 { background: #f0883e; color: #fff; }
+  .tier-badge.t1 { background: #d2991d; color: #000; }
+  .tier-badge.t2 { background: #30363d; color: var(--muted); }
+  .tier-badge.t3 { background: #1c2333; color: var(--muted); }
+
+  /* ========== Guide Cards ========== */
+  .guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .guide-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 20px; text-align: center;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .guide-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .guide-icon { font-size: 38px; margin-bottom: 12px; }
+  .guide-card h4 { font-size: 15px; margin-bottom: 6px; }
+  .guide-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ========== News List ========== */
+  .news-list { display: flex; flex-direction: column; gap: 4px; }
+  .news-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 16px; background: var(--surface); border-radius: 8px;
+    transition: background 0.2s; border: 1px solid transparent;
+  }
+  .news-item:hover { background: var(--surface2); border-color: var(--border); }
+  .news-date {
+    font-size: 11px; color: var(--muted); white-space: nowrap;
+    background: var(--surface2); padding: 4px 10px; border-radius: 6px;
+  }
+  .news-tag {
+    font-size: 11px; padding: 3px 10px; border-radius: 12px;
+    font-weight: 600; white-space: nowrap;
+  }
+  .news-tag.update { background: rgba(88,166,255,0.12); color: var(--blue); }
+  .news-tag.event { background: rgba(240,136,62,0.12); color: var(--accent); }
+  .news-tag.guide { background: rgba(63,185,80,0.12); color: var(--green); }
+  .news-tag.balance { background: rgba(163,113,247,0.15); color: var(--purple); }
+  .news-tag.esports { background: rgba(248,81,73,0.12); color: var(--red); }
+  .news-title { flex:1; font-size: 14px; font-weight: 500; }
+
+  /* ========== Footer ========== */
+  .footer {
+    border-top: 1px solid var(--border); padding: 32px 24px;
+    text-align: center; color: var(--muted); font-size: 13px;
+  }
+  .footer a { color: var(--text); }
+  .footer .disclaimer {
+    font-size: 11px; color: #484f58; margin-top: 8px;
+  }
+
+  /* ========== Responsive ========== */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-search { width: 130px; }
+    .hero h1 { font-size: 28px; }
+    .hero-search { width: 100%; }
+    .hero-stats { gap: 20px; }
+    .stat-num { font-size: 22px; }
+    .op-grid { grid-template-columns: 1fr; }
+    .tier-table { font-size: 12px; }
+    .tier-table th, .tier-table td { padding: 8px 10px; }
+    .news-item { flex-wrap: wrap; }
+    .news-date { order: 3; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-logo">三角洲<span>攻略站</span></div>
+  <div class="nav-links">
+    <a href="#tier">武器天梯</a>
+    <a href="#weapons">热门配装</a>
+    <a href="#maps">地图点位</a>
+    <a href="#operators">干员图鉴</a>
+    <a href="#guide">新手指南</a>
+    <a href="#news">版本资讯</a>
+  </div>
+  <input class="nav-search" type="search" placeholder="搜索武器、地图、干员…" />
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> S9 「回响」赛季 · 进行中</div>
+  <h1>三角洲行动<span>攻略站</span></h1>
+  <p>全武器天梯排行 · 烽火改枪方案 · 干员技能详解 · 地图撤离点位<br>由玩家社区维护的三角洲行动中文攻略百科</p>
+  <div class="hero-search">
+    <input type="text" placeholder="搜索武器配装、地图攻略、干员技能…" />
+    <button>搜索</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">武器配装方案</div></div>
+    <div class="stat-item"><div class="stat-num">15</div><div class="stat-label">全干员图鉴</div></div>
+    <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">地图攻略</div></div>
+    <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">核心模式</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ========== 武器天梯排行 ========== -->
+  <section class="section" id="tier">
+    <div class="section-header">
+      <h2>S9 赛季<span>武器天梯</span></h2>
+      <a href="#" class="more">详细评测 →</a>
+    </div>
+    <div class="tier-bar">
+      <div class="tier-item tier-t0">T0 · 版本答案</div>
+      <div class="tier-item tier-t05">T0.5 · 强势备选</div>
+      <div class="tier-item tier-t1">T1 · 稳健可靠</div>
+      <div class="tier-item tier-t2">T2 · 过渡经济</div>
+    </div>
+    <div class="tier-table-wrapper">
+      <table class="tier-table">
+        <thead>
+          <tr><th>梯队</th><th>武器</th><th>定位</th><th>优势</th><th>适用模式</th><th>推荐度</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tier-badge t0">T0</span></td>
+            <td><strong>M7 战斗步枪</strong></td>
+            <td>全距离无短板</td>
+            <td>近中远三维压制，大弹鼓持续火力，TTK 版本顶尖</td>
+            <td>绝密/机密 全模式</td>
+            <td style="color:var(--red);font-weight:700;">必练</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge t0">T0</span></td>
+            <td><strong>AS VAL 巨浪</strong></td>
+            <td>近战之王</td>
+            <td>0.3 秒融五甲，贴脸秒杀，射速拉满</td>
+            <td>CQB / 室内</td>
+            <td style="color:var(--red);font-weight:700;">必练</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge t05">T0.5</span></td>
+            <td><strong>M14 射手步枪</strong></td>
+            <td>中远距离压制</td>
+            <td>"14大人"，手感标杆，精准度高</td>
+            <td>烽火地带 / 全面战场</td>
+            <td style="color:var(--accent);font-weight:700;">强烈推荐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge t05">T0.5</span></td>
+            <td><strong>MK47 战斗步枪</strong></td>
+            <td>中距离爆发</td>
+            <td>S6 新增，高伤害 + 连发精准</td>
+            <td>烽火地带</td>
+            <td style="color:var(--accent);font-weight:700;">强烈推荐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge t05">T0.5</span></td>
+            <td><strong>腾龙（高速导气）</strong></td>
+            <td>全能型突击</td>
+            <td>满改后中距离碾压，射速与伤害平衡</td>
+            <td>全面战场</td>
+            <td style="color:var(--accent);font-weight:700;">强烈推荐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge t05">T0.5</span></td>
+            <td><strong>PKM / AR57 / SR25 / KC17</strong></td>
+            <td>特定场景强力</td>
+            <td>各自在特定距离/模式中有 T0 级表现</td>
+            <td>视武器而定</td>
+            <td style="color:#d2991d;">推荐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge t1">T1</span></td>
+            <td><strong>K416 突击步枪</strong></td>
+            <td>机密性价比王</td>
+            <td>S9 后坐力大幅降低，AP 弹秒伤破千，满配仅 27~48w 哈夫币</td>
+            <td>机密模式 / 新手</td>
+            <td style="color:var(--green);">新手首选</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge t1">T1</span></td>
+            <td><strong>MP7 / M4A1(AP) / AUG / 链锯M249</strong></td>
+            <td>各场景可用</td>
+            <td>稳健可靠，性价比高，适合经济过渡</td>
+            <td>多模式</td>
+            <td style="color:var(--green);">可用</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ========== 热门武器配装 ========== -->
+  <section class="section" id="weapons">
+    <div class="section-header">
+      <h2>热门<span>配装方案</span></h2>
+      <a href="#" class="more">查看全部方案 →</a>
+    </div>
+    <div class="card-grid">
+      <!-- M7 -->
+      <div class="card" style="position:relative;">
+        <span class="card-rank rank-t0">T0</span>
+        <div class="card-header">
+          <div class="card-icon">🎯</div>
+          <div>
+            <div class="card-title">M7 战斗步枪</div>
+            <div class="card-subtitle">全距离制霸 · 绝密局首选</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="card-tag t0">版本T0</span>
+          <span class="card-tag">战斗步枪</span>
+          <span class="card-tag">高成本</span>
+        </div>
+        <p class="card-desc">提风枪管拉满射程 + 大弹鼓续航 + 操控配件补开镜。满改约 100w 哈夫币，绝密/机密全模式通吃。</p>
+        <div class="card-info">
+          <span><strong>全距离 S</strong>综合评级</span>
+          <span><strong>~100w</strong>满配造价</span>
+          <span><strong>绝密推荐</strong>适用场景</span>
+        </div>
+        <div class="card-code">改枪码：6JPO78S09ULPCF59QNBTB</div>
+      </div>
+
+      <!-- K416 -->
+      <div class="card" style="position:relative;">
+        <span class="card-rank rank-t1">T1</span>
+        <div class="card-header">
+          <div class="card-icon">🔫</div>
+          <div>
+            <div class="card-title">K416 突击步枪（AP弹）</div>
+            <div class="card-subtitle">机密性价比天花板</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="card-tag t1">T1·穿甲新皇</span>
+          <span class="card-tag newbie">新手推荐</span>
+          <span class="card-tag">突击步枪</span>
+        </div>
+        <p class="card-desc">S9 后坐力大幅降低。沙暴补偿器 + 长枪管 + 共振握把，35 米内激光级压枪。AP 弹加持秒伤破千。</p>
+        <div class="card-info">
+          <span><strong>A+</strong>综合评级</span>
+          <span><strong>27~48w</strong>满配造价</span>
+          <span><strong>机密首选</strong>适用场景</span>
+        </div>
+        <div class="card-code">高稳：6IUJI2C06N3JUGK4SSBSR</div>
+      </div>
+
+      <!-- AS VAL -->
+      <div class="card" style="position:relative;">
+        <span class="card-rank rank-t0">T0</span>
+        <div class="card-header">
+          <div class="card-icon">⚡</div>
+          <div>
+            <div class="card-title">AS VAL 巨浪</div>
+            <div class="card-subtitle">近战秒杀 · CQB 之王</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="card-tag t0">版本T0</span>
+          <span class="card-tag">冲锋突击</span>
+          <span class="card-tag">贴脸</span>
+        </div>
+        <p class="card-desc">0.3 秒融五甲，全游戏最快 TTK 之一。房区巷战绕后利器，近距离一发入魂。配长管可中距离补强。</p>
+        <div class="card-info">
+          <span><strong>S</strong>综合评级</span>
+          <span><strong>~60w</strong>满配造价</span>
+          <span><strong>CQB / 室内</strong>适用场景</span>
+        </div>
+        <div class="card-code">改枪码：6JNVN3S03EINQ63AGU05N</div>
+      </div>
+
+      <!-- M14 -->
+      <div class="card" style="position:relative;">
+        <span class="card-rank rank-t05">T0.5</span>
+        <div class="card-header">
+          <div class="card-icon">🔭</div>
+          <div>
+            <div class="card-title">M14 射手步枪</div>
+            <div class="card-subtitle">中远距离 · 手感标杆</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="card-tag t05">T0.5·强势</span>
+          <span class="card-tag">射手步枪</span>
+          <span class="card-tag">高精度</span>
+        </div>
+        <p class="card-desc">"14 大人"，社区公认手感最好的武器之一。中远距离点射精准，弹道回正快，全面战场 & 烽火双修。</p>
+        <div class="card-info">
+          <span><strong>A+</strong>综合评级</span>
+          <span><strong>中</strong>满配造价</span>
+          <span><strong>全模式</strong>适用场景</span>
+        </div>
+        <div class="card-code">高稳配装：搭配沙暴补偿器 + 三角握把</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 地图点位 ========== -->
+  <section class="section" id="maps">
+    <div class="section-header">
+      <h2>地图<span>点位速览</span></h2>
+      <a href="#" class="more">查看全部地图 →</a>
+    </div>
+    <div class="map-grid">
+      <div class="map-card">
+        <div class="map-thumb zero-dam">
+          <span class="map-mode-badge mode-ops">烽火地带</span>
+          🌊
+        </div>
+        <div class="map-body">
+          <h4>零号大坝 Zero Dam</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0;">经典撤离图，水坝建筑群，中近距离交火为主</p>
+          <div class="map-meta">
+            <span>易/普/困</span><span>CQB+中距</span><span>新手入门图</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-card">
+        <div class="map-thumb layali">
+          <span class="map-mode-badge mode-ops">烽火地带</span>
+          🏜️
+        </div>
+        <div class="map-body">
+          <h4>长弓溪谷 Layali Grove</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0;">中东沙漠风格，开阔地形，远距离对枪为主</p>
+          <div class="map-meta">
+            <span>易/普/困</span><span>远距离</span><span>S6 野火环境</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-card">
+        <div class="map-thumb space-city">
+          <span class="map-mode-badge mode-ops">烽火地带</span>
+          🏙️
+        </div>
+        <div class="map-body">
+          <h4>航天中心 Space City</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0;">城市多层建筑，室内/室外混合，垂直战斗</p>
+          <div class="map-meta">
+            <span>易/普/困</span><span>混合地形</span><span>威龙主场</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-card">
+        <div class="map-thumb brakkesh">
+          <span class="map-mode-badge mode-ops">烽火地带</span>
+          🏚️
+        </div>
+        <div class="map-body">
+          <h4>巴克什 Brakkesh</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0;">室内密集型城区，近距离巷战，逐层清点</p>
+          <div class="map-meta">
+            <span>易/普/困</span><span>CQB</span><span>喷子/冲锋枪</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-card">
+        <div class="map-thumb tide">
+          <span class="map-mode-badge mode-ops">烽火地带</span>
+          🏝️
+        </div>
+        <div class="map-body">
+          <h4>潮汐监狱 Tide Prison</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0;">S5 新增海岛监狱，4 层结构 + 水下探索，Boss 战</p>
+          <div class="map-meta">
+            <span>75w+ 门槛</span><span>水下战斗</span><span>Boss: Raven</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-card">
+        <div class="map-thumb cracked">
+          <span class="map-mode-badge mode-warfare">全面战场</span>
+          🏜️
+        </div>
+        <div class="map-body">
+          <h4>裂痕 Cracked</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0;">沙漠小镇 32v32，快节奏步战，载具支援</p>
+          <div class="map-meta">
+            <span>32v32</span><span>步战为主</span><span>入门战场</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-card">
+        <div class="map-thumb" style="background:linear-gradient(135deg,#1a3a2a,#0f1f15);">
+          <span class="map-mode-badge mode-warfare">全面战场</span>
+          🌴
+        </div>
+        <div class="map-body">
+          <h4>旋风 Cyclone</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0;">S5新增热带岛屿，动态风暴天气，喷射艇 & 游泳</p>
+          <div class="map-meta">
+            <span>32v32</span><span>动态天气</span><span>海陆两栖</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-card">
+        <div class="map-thumb" style="background:linear-gradient(135deg,#3a1a2a,#1f1020);">
+          <span class="map-mode-badge mode-warfare">全面战场</span>
+          🏛️
+        </div>
+        <div class="map-body">
+          <h4>断层 Fault</h4>
+          <p style="font-size:12px;color:var(--muted);margin:4px 0;">S6新增古遗迹+浓雾天气，垂直战斗，F-45A空战</p>
+          <div class="map-meta">
+            <span>32v32</span><span>F-45A战斗机</span><span>垂直地形</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 干员图鉴 ========== -->
+  <section class="section" id="operators">
+    <div class="section-header">
+      <h2>全干员<span>图鉴</span></h2>
+      <a href="#" class="more">查看全部 15 位干员 →</a>
+    </div>
+
+    <!-- 突击兵 -->
+    <h3 style="font-size:14px;color:var(--red);margin-bottom:14px;font-weight:700;">⚔️ 突击兵 Assault</h3>
+    <div class="op-grid">
+      <div class="op-card">
+        <div class="op-avatar assault">🐺</div>
+        <div class="op-info">
+          <span class="role-badge assault">突击</span>
+          <h4>红狼 D-Wolf</h4>
+          <div class="op-eng">凯·席尔瓦 Kai Silva</div>
+          <div class="op-skill"><strong>动力外骨骼</strong>：移速+攻速提升，三联装手炮，战术滑铲</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar assault">🐉</div>
+        <div class="op-info">
+          <span class="role-badge assault">突击</span>
+          <h4>威龙 Vyron</h4>
+          <div class="op-eng">王宇昊</div>
+          <div class="op-skill"><strong>虎蹲炮</strong>：范围击倒，动力推进喷气位移，磁吸炸弹 C4</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar assault">🌑</div>
+        <div class="op-info">
+          <span class="role-badge assault">突击</span>
+          <h4>无名 Nox</h4>
+          <div class="op-eng">埃利·德·蒙贝尔</div>
+          <div class="op-skill"><strong>静默潜袭</strong>：旋刃飞行器，突破型闪光弹（S4 上线）</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar assault">⚡</div>
+        <div class="op-info">
+          <span class="role-badge assault">突击</span>
+          <h4>疾风 Tempest</h4>
+          <div class="op-eng">克莱尔·安·拜尔斯</div>
+          <div class="op-skill"><strong>辅助脊椎</strong>：危险感知加速，钻墙电刺，战术翻滚（S5 上线）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 支援兵 -->
+    <h3 style="font-size:14px;color:var(--blue);margin:24px 0 14px;font-weight:700;">🩺 支援兵 Support</h3>
+    <div class="op-grid">
+      <div class="op-card">
+        <div class="op-avatar support">🐝</div>
+        <div class="op-info">
+          <span class="role-badge support">支援</span>
+          <h4>蜂医 Stinger</h4>
+          <div class="op-eng">罗伊·斯米 Roy Smee</div>
+          <div class="op-skill"><strong>激素枪</strong>：远程多目标治疗，烟幕无人机，高效救援被动</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar support">🕷️</div>
+        <div class="op-info">
+          <span class="role-badge support">支援</span>
+          <h4>蛊 Toxik</h4>
+          <div class="op-eng">佐娅·庞琴科娃 Zoya</div>
+          <div class="op-skill"><strong>致盲毒雾</strong>：流萤集群系统，肾上腺素激活团队增益</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar support">🦋</div>
+        <div class="op-info">
+          <span class="role-badge support">支援</span>
+          <h4>蝶 Lina</h4>
+          <div class="op-eng">莉娜·范德梅尔</div>
+          <div class="op-skill"><strong>蝶式救援无人机</strong>：纳米医疗粉尘，遥控烟雾掩护</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 侦察兵 -->
+    <h3 style="font-size:14px;color:var(--green);margin:24px 0 14px;font-weight:700;">🔭 侦察兵 Recon</h3>
+    <div class="op-grid">
+      <div class="op-card">
+        <div class="op-avatar recon">🏹</div>
+        <div class="op-info">
+          <span class="role-badge recon">侦察</span>
+          <h4>露娜 Luna</h4>
+          <div class="op-eng">金卢娜</div>
+          <div class="op-skill"><strong>侦察箭矢</strong>：探测+标记敌人，电击箭矢，猎人标记（新手推荐）</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar recon">🦅</div>
+        <div class="op-info">
+          <span class="role-badge recon">侦察</span>
+          <h4>骇爪 Hackclaw</h4>
+          <div class="op-eng">麦晓雯</div>
+          <div class="op-skill"><strong>信号破译器</strong>：反电子设备，数据飞刀，闪光巡飞器</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar recon">🔊</div>
+        <div class="op-info">
+          <span class="role-badge recon">侦察</span>
+          <h4>回响 Luke</h4>
+          <div class="op-eng">卢克·埃弗利</div>
+          <div class="op-skill"><strong>次声波干扰器</strong>：回声声纹探测，声波感知定位</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar recon">🦅</div>
+        <div class="op-info">
+          <span class="role-badge recon">侦察</span>
+          <h4>银翼 Raptor</h4>
+          <div class="op-eng">兰登·哈里森</div>
+          <div class="op-skill"><strong>蜂鸟间谍摄像头</strong>：猎鹰仿生无人机，脉冲 EMP 手雷（S6上线）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 工程兵 -->
+    <h3 style="font-size:14px;color:var(--gold);margin:24px 0 14px;font-weight:700;">🛠️ 工程兵 Engineer</h3>
+    <div class="op-grid">
+      <div class="op-card">
+        <div class="op-avatar engineer">🛡️</div>
+        <div class="op-info">
+          <span class="role-badge engineer">工程</span>
+          <h4>牧羊人 Shepherd</h4>
+          <div class="op-eng">泰瑞·缪萨 Terry Musa</div>
+          <div class="op-skill"><strong>声波震慑</strong>：范围压制+降射速，声波陷阱，减振防御</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar engineer">🚀</div>
+        <div class="op-info">
+          <span class="role-badge engineer">工程</span>
+          <h4>乌鲁鲁 Uluru</h4>
+          <div class="op-eng">大卫·费莱尔 David</div>
+          <div class="op-skill"><strong>巡飞弹</strong>：图像制导+分裂弹头，速凝掩体，复合燃烧弹</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar engineer">🔰</div>
+        <div class="op-info">
+          <span class="role-badge engineer">工程</span>
+          <h4>深蓝 Sineva</h4>
+          <div class="op-eng">阿列克谢 Alexei</div>
+          <div class="op-skill"><strong>防爆套装</strong>：持盾 30% 减伤，多功能钩爪枪，刀片刺网手雷</div>
+        </div>
+      </div>
+      <div class="op-card">
+        <div class="op-avatar engineer">🤖</div>
+        <div class="op-info">
+          <span class="role-badge engineer">工程</span>
+          <h4>比特 Gimzo</h4>
+          <div class="op-eng">拉希德·拉哈尔 Rashid Rahal</div>
+          <div class="op-skill"><strong>哨兵母巢</strong>：微型爆炸机器人，智能烟雾地雷，捕网蜘蛛（S7上线）</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 新手指南 ========== -->
+  <section class="section" id="guide">
+    <div class="section-header">
+      <h2>新手<span>快速上手</span></h2>
+      <a href="#" class="more">更多指南 →</a>
+    </div>
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="guide-icon">🎮</div>
+        <h4>基础操作与键位</h4>
+        <p>移动射击、战术动作、快捷键推荐。推荐练枪场先熟悉弹道。</p>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🗺️</div>
+        <h4>烽火撤离机制</h4>
+        <p>撤离点类型、呼叫时机（拉闸/不拉闸）、安全路线规划</p>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">💰</div>
+        <h4>经济/保险系统</h4>
+        <p>哈夫币获取途径、保险箱使用技巧、背包价值管理</p>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🔧</div>
+        <h4>武器改装入门</h4>
+        <p>配件系统详解、改装台操作、方案保存与分享改枪码</p>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">👥</div>
+        <h4>组队配合思路</h4>
+        <p>1侦查+1工程+1支援的最佳阵容，信息报点与交叉火力</p>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">📱</div>
+        <h4>社区工具推荐</h4>
+        <p>DELTAHUB App（iOS/Android）提供配装推荐与交互地图</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 版本资讯 ========== -->
+  <section class="section" id="news">
+    <div class="section-header">
+      <h2>版本<span>资讯</span></h2>
+      <a href="#" class="more">更多资讯 →</a>
+    </div>
+    <div class="news-list">
+      <a href="#" class="news-item">
+        <span class="news-tag esports">电竞赛事</span>
+        <span class="news-title">DFIW 2025 三角洲邀请赛 · 越南河内 · 12支战队/8个地区参赛</span>
+        <span class="news-date">2025-09-21</span>
+      </a>
+      <a href="#" class="news-item">
+        <span class="news-tag update">赛季更新</span>
+        <span class="news-title">S7「Asala」赛季：新工程干员比特/Gimzo 上线，新阵营 Asala 加入</span>
+        <span class="news-date">2025-11-18</span>
+      </a>
+      <a href="#" class="news-item">
+        <span class="news-tag event">联动活动</span>
+        <span class="news-title">S5 × 明日方舟联动：阿米娅主题皮肤、武器外观、头像名片免费获取</span>
+        <span class="news-date">2025-07-09</span>
+      </a>
+      <a href="#" class="news-item">
+        <span class="news-tag guide">配装攻略</span>
+        <span class="news-title">S9 全武器天梯出炉：M7 稳坐 T0，K416 AP 弹晋升「机密性价比王」</span>
+        <span class="news-date">2026-04-20</span>
+      </a>
+      <a href="#" class="news-item">
+        <span class="news-tag balance">平衡调整</span>
+        <span class="news-title">S9 赛季平衡：K416 后坐力大幅降低，AS VAL 弹道微调，SR-25 四肢伤害加强</span>
+        <span class="news-date">2026-04-15</span>
+      </a>
+      <a href="#" class="news-item">
+        <span class="news-tag update">平台更新</span>
+        <span class="news-title">主机版（PS5 / Xbox Series X|S）已于 8 月 19 日上线，支持全平台跨进度</span>
+        <span class="news-date">2025-08-19</span>
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>三角洲行动攻略站 · 玩家社区维护 · <a href="#">关于本站</a> · <a href="#">贡献攻略</a> · <a href="#">反馈建议</a></p>
+  <p class="disclaimer">内容仅供参考，武器数据与配装受版本更新影响，请以游戏内实际表现为准。© 2025-2026 Team Jade / 天美工作室群。本站为非官方玩家攻略站。</p>
+</footer>
+
+</body>
+</html>
